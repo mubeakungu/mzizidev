@@ -149,7 +149,13 @@ def create_app(config_name="development"):
     logger.info(f"Creating Flask app with config: {config_name}")
     
     try:
-        app = Flask(__name__)
+        # Explicitly set template and static folder paths
+        # This ensures they're found regardless of CWD on Render/cPanel
+        import os
+        app_dir = os.path.dirname(os.path.abspath(__file__))
+        app = Flask(__name__,
+                    template_folder=os.path.join(app_dir, 'templates'),
+                    static_folder=os.path.join(app_dir, 'static'))
         app.config.from_object(config[config_name])
         logger.info("✓ Flask app instance created")
     except Exception as e:
