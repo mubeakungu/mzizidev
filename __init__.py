@@ -151,11 +151,13 @@ def create_app(config_name="development"):
     try:
         # Explicitly set template and static folder paths
         # This ensures they're found regardless of CWD on Render/cPanel
+        # Note: templates and static are at PROJECT ROOT, not in /app/
         import os
         app_dir = os.path.dirname(os.path.abspath(__file__))
+        root_dir = os.path.dirname(app_dir)  # Go up one level to project root
         app = Flask(__name__,
-                    template_folder=os.path.join(app_dir, 'templates'),
-                    static_folder=os.path.join(app_dir, 'static'))
+                    template_folder=os.path.join(root_dir, 'templates'),
+                    static_folder=os.path.join(root_dir, 'static'))
         app.config.from_object(config[config_name])
         logger.info("✓ Flask app instance created")
     except Exception as e:
